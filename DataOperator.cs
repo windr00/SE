@@ -68,7 +68,7 @@ public class DataOperator {
         {
             var msg = new Msg();
             msg.type = Support.MsgTypeConverter(e.type);
-            msg.body = World.GetInstance().GetGameObjectByClientId(e.sponsorId).GetComponent<EventGenerator>().SelfSerialize(e.type, e.rawContent);
+            msg.body = World.GetInstance().GetGameObject(e.sponsorId).GetComponent<EventGenerator>().SelfSerialize(e.type, e.rawContent);
             content.msg.Add(msg);
         }
         request.head.srcType = SRCType.SIM;

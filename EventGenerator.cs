@@ -9,16 +9,25 @@ public abstract class EventGenerator : MonoBehaviour
 {
     public delegate void EventGenerated(UserEvent e);
 
-    public event EventGenerated OnEventGenerated;
-    public abstract void GenerateEvent(List<GameObject> gameObjects);
+    private event EventGenerated OnEventGenerated;
+    public abstract void GenerateEvent(object boxed);
 
     public abstract byte[] SelfSerialize(UserEvent.EventType type, object content);
 
     public string gameObjectId { get; set; }
 
+	public void AddListener(EventGenerated call) {
+		OnEventGenerated += call;
+	}
+
+	protected void BroadCastEvent(UserEvent e) {
+		if (OnEventGenerated != null) {
+			OnEventGenerated(e);
+		}
+	}
+
     void FixedUpdate()
     {
-        Dictionary<string, EventGenerated> a = new Dictionary<string, EventGenerated>();
         GenerateEvent(World.GetInstance().GetAllGameObjects());
     }
 

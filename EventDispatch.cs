@@ -37,7 +37,7 @@ public class EventDispatch
                         {
                             foreach (var item in e.targetIdList)
                             {
-                                var go = World.GetInstance().GetGameObjectByClientId(item);
+                                var go = World.GetInstance().GetGameObject(item);
                                 var handler = go.GetComponent<EventHandler>();
                                 e.rawContent = handler.SelfDeserialize(e.type, m.body);
                                 handler.Handle(e);
