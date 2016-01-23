@@ -13,8 +13,7 @@ public class DataOperator {
     private event CommandReceived OnCommandReceived;
 
 	private ManualResetEvent waitSend ;
-
-    private Communication comInstance;
+	private Communication comInstance;
     public void AddCommandListener(CommandReceived call)
     {
         OnCommandReceived += call;
@@ -30,11 +29,14 @@ public class DataOperator {
 
     private static DataOperator _instance = null;
     private DataOperator() {
-        comInstance = new Communication(Statics.netType, Statics.ServerIpAddress, Statics.ServerPort);
-        comInstance.OnNetworkConnected += comInstance_OnNetworkConnected;
-        comInstance.OnDataReceived += comInstance_OnDataReceived;
-        comInstance.OnDataSent += comInstance_OnDataSent;
-        comInstance.OnNetworkError += comInstance_OnNetworkError;
+		comInstance = Communication.GetInstance ();
+
+        comInstance.Initial(Statics.netType, Statics.ServerIpAddress, Statics.ServerPort);
+
+		comInstance.AddNetworkListeners (comInstance_OnNetworkConnected, 
+		                                 comInstance_OnDataSent,
+		                                 comInstance_OnDataReceived,
+		                                 comInstance_OnNetworkError);
         comInstance.Connect();
     }
 
@@ -61,7 +63,7 @@ public class DataOperator {
         }
     }
 
-    private void comInstance_OnNetworkError()
+    private void comInstance_OnNetworkError(Exception e)
     {
 
     }

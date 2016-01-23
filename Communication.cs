@@ -15,6 +15,21 @@ public class Communication
 {
     public bool isNetworkAvailable = false;
 
+	private static Communication _instance = null;
+
+	public static Communication GetInstance() {
+		if (_instance == null) {
+			_instance = new Communication();
+		}
+		return _instance;
+	}
+
+	public void AddNetworkListeners(NetworkConnected netConCall, DataSent dataSentCall, DataReceived dataRecvCall, NetworkError netErrorCall) {
+		OnNetworkConnected += netConCall;
+		OnDataSent += dataSentCall;
+		OnDataReceived += dataRecvCall;
+		OnNetworkError += netErrorCall;
+	}
 
     public enum NetworkType
     {
@@ -34,26 +49,28 @@ public class Communication
 
     public delegate void NetworkConnected();
 
-    public event NetworkConnected OnNetworkConnected;
+    private event NetworkConnected OnNetworkConnected;
 
     public delegate void DataReceived(object data);
 
-    public event DataReceived OnDataReceived;
+    private event DataReceived OnDataReceived;
 
     public delegate void DataSent();
 
-    public event DataSent OnDataSent;
+    private event DataSent OnDataSent;
 
-    public delegate void NetworkError();
+    public delegate void NetworkError(Exception e);
 
-    public event NetworkError OnNetworkError;
+    private event NetworkError OnNetworkError;
 
-    public Communication(NetworkType netType, string ipAddress, int port)
-    {
-        type = netType;
-        this.ipAddress = ipAddress;
-        this.port = port;
-    }
+	public void Initial(NetworkType netType, string ipAddress, int port) {
+		
+		type = netType;
+		this.ipAddress = ipAddress;
+		this.port = port;
+	}
+
+    private Communication(){}
 
     public string GetHostIP()
     {
@@ -123,11 +140,11 @@ public class Communication
         }
     }
 
-    private void ErrorCallback()
+    private void ErrorCallback(Exception e)
     {
         if (OnNetworkError != null)
         {
-            OnNetworkError();
+            OnNetworkError(e);
         }
     }
 
@@ -153,7 +170,7 @@ public class Communication
         }
         catch (Exception e)
         {
-            ErrorCallback();
+            ErrorCallback(e);
             Debug.Log("connection error: " + e.Message);
         }
         
@@ -181,7 +198,7 @@ public class Communication
         }
         catch (Exception e)
         {
-            ErrorCallback();
+            ErrorCallback(e);
             Debug.Log("send error: " + e.Message);
         }
     }
@@ -210,7 +227,7 @@ public class Communication
         }
         catch (Exception e)
         {
-            ErrorCallback();
+            ErrorCallback(e);
             Debug.Log("read error: " + e + ": " +  e.Message);
         }
     }
