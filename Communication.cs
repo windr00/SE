@@ -79,7 +79,6 @@ public class Communication
         switch (type)
         {
             case NetworkType.TCP:
-			Debug.Log("Sending " + BitConverter.ToString(data));
                 tcpInstance.Send(data, new AsyncCallback(SendCallBack));
                 break;
             default:
