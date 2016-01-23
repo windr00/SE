@@ -23,6 +23,6 @@ public class Driver : MonoBehaviour {
 
 	void FixedUpdate () 
     {
-
+		DataOperator.GetInstance ().SendMessage ();
 	}
 }

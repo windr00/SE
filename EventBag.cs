@@ -24,11 +24,13 @@ public class EventBag
 
     public static EventBag GetInstance()
     {
+		if (_instance == null) {
+			_instance = new EventBag();
+		}
         return _instance;
     }
 
     private EventBag()
     {
-        _instance = this;
     }
 }

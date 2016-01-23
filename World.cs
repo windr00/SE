@@ -20,7 +20,6 @@ public class World
     {
         gameObjectCollection.Add(goId, go);
     }
-
     
 
     public void RemoveGameObject(string goId)
@@ -35,14 +34,17 @@ public class World
         return new List<GameObject>(gameObjectCollection.Values);
     }
 
-    public GameObject GetGameObject(string goId)
-    {
-        return gameObjectCollection[goId];
-    }
-
 	public List<string> GetAllGOIds() {
 		return new List<string> (gameObjectCollection.Keys);
 	}
+
+    public GameObject GetGameObject(string goId)
+    {
+		if (goId.Equals ("0")) {
+			return predefiendGameObject;
+		}
+        return gameObjectCollection[goId];
+    }
     
  
     public static World GetInstance() 

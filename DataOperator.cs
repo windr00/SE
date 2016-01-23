@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,6 +12,8 @@ public class DataOperator {
 
     private event CommandReceived OnCommandReceived;
 
+	private ManualResetEvent waitSend ;
+
     private Communication comInstance;
     public void AddCommandListener(CommandReceived call)
     {
@@ -18,12 +21,15 @@ public class DataOperator {
     }
 
     public static DataOperator GetInstance () {
+		if (_instance == null) {
+			_instance = new DataOperator();
+		}
+
         return _instance;
     }
 
     private static DataOperator _instance = null;
     private DataOperator() {
-        _instance = this;
         comInstance = new Communication(Statics.netType, Statics.ServerIpAddress, Statics.ServerPort);
         comInstance.OnNetworkConnected += comInstance_OnNetworkConnected;
         comInstance.OnDataReceived += comInstance_OnDataReceived;
@@ -41,6 +47,7 @@ public class DataOperator {
 
     private void comInstance_OnDataSent()
     {
+		waitSend.Set ();
         Debug.Log("Sent");
     }
 
@@ -59,28 +66,41 @@ public class DataOperator {
 
     }
 
-    private MsgRequest FormRequest()
+    private List<MsgRequest> FormRequest()
     {
-        MsgRequest request = new MsgRequest();
-        Content content = new Content();
-        var elist = EventReporter.ReportEvent();
+		List<MsgRequest> ret = new List<MsgRequest> ();
+		//if (elist.Count == 0) {
+		//	return null;
+		//}
+		var elist = EventReporter.ReportEvent ();
         foreach (var e in elist)
         {
-            var msg = new Msg();
-            msg.type = Support.MsgTypeConverter(e.type);
-            msg.body = World.GetInstance().GetGameObject(e.sponsorId).GetComponent<EventGenerator>().SelfSerialize(e.type, e.rawContent);
-            content.msg.Add(msg);
+			var req = new MsgRequest();
+			var head = new Head();
+			var content = new Content();
+			var msg = new Msg();
+			head.srcID = e.sponsorId;
+			head.srcType = SRCType.SIM;
+			head.dstIDs.InsertRange(0,e.targetIdList);
+			msg.type = Support.MsgTypeConverter(e.type);
+			msg.body = World.GetInstance().GetGameObject(e.sponsorId).GetComponent<EventGenerator>().SelfSerialize(e.type,e.rawContent);
+			content.msg.Add(msg);
+			req.content = content;
+			req.head = head;
+			ret.Add(req);
         }
-        request.head.srcType = SRCType.SIM;
-        request.content = content;
-        request.head.srcID = comInstance.GetHostIP();
-        return request;
-    }
+		return ret;
+	}
 
     public void SendMessage()
     {
         var req = FormRequest();
-        var data = Serialize.Serailizer<MsgRequest>(req, Statics.SerializeMethod);
-        comInstance.Send(data);
+		Debug.Log ("formed request count: " + req.Count);
+		foreach (var i in req) {
+			var data = Serialize.Serailizer<MsgRequest> (i, Statics.SerializeMethod);
+			Debug.Log("Sending " + BitConverter.ToString(data));
+			comInstance.Send (data);
+			waitSend.WaitOne();
+		}
     }
 }
