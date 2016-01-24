@@ -49,10 +49,11 @@ public class World
  
     public static World GetInstance() 
     {
-        if (_instance == null) 
-        {
-            _instance = new World();
-        }
+		lock (_instance) {
+			if (_instance == null) {
+				_instance = new World ();
+			}
+		}
         return _instance;
     }
 

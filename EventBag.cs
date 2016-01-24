@@ -24,8 +24,10 @@ public class EventBag
 
     public static EventBag GetInstance()
     {
-		if (_instance == null) {
-			_instance = new EventBag();
+		lock (_instance) {
+			if (_instance == null) {
+				_instance = new EventBag ();
+			}
 		}
         return _instance;
     }

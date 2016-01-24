@@ -20,10 +20,11 @@ public class DataOperator {
     }
 
     public static DataOperator GetInstance () {
-		if (_instance == null) {
-			_instance = new DataOperator();
+		lock (_instance) {
+			if (_instance == null) {
+				_instance = new DataOperator ();
+			}
 		}
-
         return _instance;
     }
 

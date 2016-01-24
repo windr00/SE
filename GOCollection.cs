@@ -13,6 +13,7 @@ public class GOCollection
         var go = GameObject.Instantiate(GameObjectLoader.LoadGameObject(assetName)) as GameObject;
         World.GetInstance().AddGameObject(goId, go);
         var eventGenerator = go.GetComponent<EventGenerator>();
+		go.GetComponent<State> ().isInSimulator = true;
         if (eventGenerator != null)
         {
             eventGenerator.AddListener(EventCollection.OnEventTrigger);
