@@ -49,11 +49,9 @@ public class World
  
     public static World GetInstance() 
     {
-		lock (_instance) {
 			if (_instance == null) {
 				_instance = new World ();
 			}
-		}
         return _instance;
     }
 

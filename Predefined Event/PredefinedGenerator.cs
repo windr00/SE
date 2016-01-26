@@ -47,21 +47,10 @@ public class PredefinedGenerator : EventGenerator {
 		return ret;
     }
 
-	private void Test() {
-		var e = new UserEvent ();
-		var ga = new GA ();
-		ga.GOID = "tank1";
-		e.sponsorId = "0";
-		e.targetIdList = World.GetInstance ().GetAllGOIds ();
-		e.type = UserEvent.EventType.GA;
-		e.rawContent = ga as object;
-		base.BroadCastEvent (e);
-	}
 
     public override void GenerateEvent(object boxed)
     {
 		if (!(boxed is UserEvent)) {
-			Test();
 			return;
 		}
 		var e = boxed as UserEvent;

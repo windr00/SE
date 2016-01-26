@@ -44,8 +44,8 @@ public class PredefinedHandler : EventHandler
             case UserEvent.EventType.GA:
                 {
 					var proto = e.rawContent as GA;
-					GOCollection.AddGameObject(proto.GOID,proto.AssetName);
-
+					//GOCollection.AddGameObject(proto.GOID,proto.AssetName);
+                    Test(proto);
                     break;
                 }
             case UserEvent.EventType.GR:
@@ -58,5 +58,17 @@ public class PredefinedHandler : EventHandler
                     return;
                 }
         }
+    }
+
+    void Test(GA ga)
+    {
+        var go = GameObject.Instantiate(Resources.Load("Cube")) as GameObject;
+        World.GetInstance().AddGameObject(ga.GOID, go);
+        var e = new UserEvent();
+        e.sponsorId = "0";
+        e.type = UserEvent.EventType.GA;
+        e.targetIdList = World.GetInstance().GetAllGOIds();
+        e.rawContent = ga as object;
+        EventCollection.OnEventTrigger(e);
     }
 }

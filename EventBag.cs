@@ -30,10 +30,9 @@ public class EventBag
 
     public static EventBag GetInstance()
     {
-		lock (_instance) {
+
 			if (_instance == null) {
 				_instance = new EventBag ();
-			}
 		}
         return _instance;
     }
