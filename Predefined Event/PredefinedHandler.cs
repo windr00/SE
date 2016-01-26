@@ -64,6 +64,8 @@ public class PredefinedHandler : EventHandler
     {
         var go = GameObject.Instantiate(Resources.Load("Cube")) as GameObject;
         World.GetInstance().AddGameObject(ga.GOID, go);
+        go.GetComponent<EventGenerator>().gameObjectId = ga.GOID;
+        go.SetActive(true);
         var e = new UserEvent();
         e.sponsorId = "0";
         e.type = UserEvent.EventType.GA;

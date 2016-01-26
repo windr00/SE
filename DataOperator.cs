@@ -59,7 +59,7 @@ public class DataOperator {
         var data = Serialize.Deserailizer<MsgResponse>(bytes as byte[], Statics.DeserializeMethod);
         if (OnCommandReceived != null)
         {
-            OnCommandReceived(data);
+                OnCommandReceived(data);
         }
     }
 

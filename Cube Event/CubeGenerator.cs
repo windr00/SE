@@ -11,7 +11,7 @@ public class CubeGenerator : EventGenerator {
 		var e = new UserEvent ();
 		e.type = UserEvent.EventType.CTR;
 		e.sponsorId = base.gameObjectId;
-		e.targetIdList.Add (base.gameObjectId);
+        e.targetIdList = new List<string>() { base.gameObjectId};
 		var ce = new CubeCE ();
 		if (Input.GetKey (KeyCode.W)) {
 			ce.key.Add("W");

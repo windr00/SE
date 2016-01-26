@@ -14,11 +14,16 @@ public class Driver : MonoBehaviour {
     void Awake()
     {
         DataOperator.GetInstance().AddCommandListener(ReceiveCommand);
+        Loom.Init();
     }
 
     private void ReceiveCommand(List<MsgResponse> command)
     {
-        EventDispatch.DispatchEvent(command);
+        Loom.QueueOnMainThread(() =>
+        {
+            EventDispatch.DispatchEvent(command);
+        });
+        
     }
 
 	void FixedUpdate () 
