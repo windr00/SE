@@ -12,7 +12,7 @@ public class DataOperator {
 
     private event CommandReceived OnCommandReceived;
 
-	private ManualResetEvent waitSend ;
+	private ManualResetEvent waitSend = new ManualResetEvent(false);
 	private Communication comInstance;
     public void AddCommandListener(CommandReceived call)
     {
@@ -29,9 +29,10 @@ public class DataOperator {
     }
 
     private static DataOperator _instance = null;
+
     private DataOperator() {
 		comInstance = Communication.GetInstance ();
-
+		waitSend.Reset ();
         comInstance.Initial(Statics.netType, Statics.ServerIpAddress, Statics.ServerPort);
 
 		comInstance.AddNetworkListeners (comInstance_OnNetworkConnected, 

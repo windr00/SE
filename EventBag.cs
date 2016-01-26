@@ -22,6 +22,12 @@ public class EventBag
         return eventList;
     }
 
+	public void RemoveAll() {
+		lock (eventList) {
+			eventList.Clear();
+		}
+	}
+
     public static EventBag GetInstance()
     {
 		lock (_instance) {

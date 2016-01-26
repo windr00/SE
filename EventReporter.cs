@@ -6,6 +6,8 @@ public class EventReporter {
 
     public static List<UserEvent> ReportEvent()
     {
-        return EventBag.GetInstance().GetAll();
+        var ret = EventBag.GetInstance().GetAll();
+		EventBag.GetInstance ().RemoveAll ();
+		return ret;
     }
 }
