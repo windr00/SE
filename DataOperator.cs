@@ -57,6 +57,8 @@ public class DataOperator {
     private void comInstance_OnDataReceived(object bytes)
     {
         var data = Serialize.Deserailizer<MsgResponse>(bytes as byte[], Statics.DeserializeMethod);
+        Debug.Log("received data");
+        comInstance.Read();
         if (OnCommandReceived != null)
         {
                 OnCommandReceived(data);

@@ -2,32 +2,39 @@
 using System.Collections;
 using ProtoBuf;
 using CubeEvent;
+using System.IO;
 
 public class CubeHandler : EventHandler {
 
 
 	private void PysicalMove(CubeCE ce) {
-		var rbody = gameObject.GetComponent<Rigidbody>();
+        //var rbody = gameObject.GetComponent<Rigidbody>();
+        Debug.Log("handle cube ce, key count:" + ce.key.Count);
 		foreach (var key in ce.key) {
+            Debug.Log(key);
 			switch(key) {
 			case "W":
 			{
-				rbody.AddForce(transform.forward * 1.0f);
+                Debug.Log("forward");
+                transform.Translate(transform.forward);
 				break;
 			}
 			case "S":
 			{
-				rbody.AddForce(transform.forward * -1.0f);
+                Debug.Log("backward");
+                transform.Translate(-1 * transform.forward);
 				break;
 			}
 			case "A":
 			{
-				rbody.AddForce(transform.right * -1.0f);
+                Debug.Log("left");
+                transform.Translate(-1 * transform.right);
 				break;
 			}
 			case "D":
 			{
-				rbody.AddForce(transform.right * 1.0f);
+                Debug.Log("right");
+                transform.Translate(transform.right);
 				break;
 			}
 			}
@@ -85,6 +92,27 @@ public class CubeHandler : EventHandler {
 
 	public override object SelfDeserialize (UserEvent.EventType type, byte[] body)
 	{
-		throw new System.NotImplementedException ();
+        object ret = null;
+
+        using (var stream = new MemoryStream(body))
+        {
+            switch (type)
+            {
+                case UserEvent.EventType.CTR:
+                    {
+                        ret = Serializer.Deserialize<CubeCE>(stream);
+                        break;
+                    }
+                case UserEvent.EventType.ST:
+                    {
+                        ret = Serializer.Deserialize<CubeSTE>(stream);
+                        break;
+                    }
+            
+            }
+
+        }
+
+        return ret;
 	}
 }

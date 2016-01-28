@@ -38,22 +38,32 @@ public class CubeGenerator : EventGenerator {
 		e.sponsorId = base.gameObjectId;
 		e.targetIdList = World.GetInstance ().GetAllGOIds ();
 		var ste = new CubeSTE ();
-		if (!state.transform.position.Equals (gameObject.transform.position)) {
+        Debug.Log("detect movement");
+		if (!state.position.Equals (gameObject.transform.position)) {
 			var content = new Content();
+            Debug.Log("position trans");
 			content.state = StateEnum.POS;
+            var value = new CubeEvent.Vector3();
+            content.value = value;
 			content.value.x = gameObject.transform.position.x;
 			content.value.y = gameObject.transform.position.y;
 			content.value.z = gameObject.transform.position.z;
 			ste.content.Add(content);
+            state.position = gameObject.transform.position;
 		}
-		if (!state.transform.eulerAngles.Equals (gameObject.transform.eulerAngles)) {
+		if (!state.rotation.Equals (gameObject.transform.eulerAngles)) {
+            Debug.Log("rotation trans");
 			var content = new Content();
+            var value = new CubeEvent.Vector3();
+            content.value = value;
 			content.state = StateEnum.ROT;
 			content.value.x = transform.eulerAngles.x;
 			content.value.y = transform.eulerAngles.y;
 			content.value.z = transform.eulerAngles.z;
 			ste.content.Add(content);
+            state.rotation = gameObject.transform.eulerAngles;
 		}
+        e.type = UserEvent.EventType.ST;
 		e.rawContent = ste as object;
 		if (ste.content.Count == 0) {
 			return ;

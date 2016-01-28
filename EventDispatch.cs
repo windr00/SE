@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Myproto;
+using UnityEngine;
 
 public class EventDispatch
 {
@@ -35,6 +36,7 @@ public class EventDispatch
                     case MsgType.Environment:
                     case MsgType.StateTransfer:
                         {
+                            Debug.Log("user event dispatch, target count: " + e.targetIdList.Count);
                             foreach (var item in e.targetIdList)
                             {
                                 var go = World.GetInstance().GetGameObject(item);
